@@ -23,7 +23,9 @@
     "continental" : {el : "landline_continental"},
     "alaska"      : {el : "landline_alaska"},
     "hawaii"      : {el : "landline_hawaii"},
-    "dc"          : {el : "landline_dc"}
+    "dc"          : {el : "landline_dc"},
+    // new territories
+    "trtr"        : {el : "landline_trtr"}
   };
 
   MapCanvas.prototype.on = function(evt, cb) {
@@ -80,6 +82,14 @@
       left   : 0.915
     });
 
+    // new trtr
+    containers["trtr"] = _.extend(containers["trtr"], {
+      width  : this.container.width() * 0.02,
+      height : this.container.height() * 0.08,
+      top    : "5%",
+      left   : 0.70
+    });
+
     var setPositions = function(container) {
       $("#" + containers[container].el)
         .width(containers[container].width)
@@ -106,6 +116,17 @@
           var dcLineCoordPixels = _(dcLineCoordPcts).map(function(pair) { return [containers[container].width * pair[0], containers[container].height * pair[1]] });
           this.paper[container].path(["M", dcLineCoordPixels[0][0], dcLineCoordPixels[0][1], "L", dcLineCoordPixels[1][0], dcLineCoordPixels[1][1]] ).attr("stroke", "#cecece").attr("stroke-width", "0.5");
         }
+        if (container === "trtr"){
+          var trtrLineCoordPcts   = [[0.70, 0.05], [0.70, 0.25], [1.00,0.25], [1.00,0.05]];
+          var trtrLineCoordPixels = _(trtrLineCoordPcts).map(function(pair) { return [containers[container].width * pair[0], containers[container].height * pair[1], containers[container].height * pair[2], containers[container].height * pair[3]] });
+          var trtrshap = this.paper[container].path(
+            ["M", trtrLineCoordPixels[0][0], trtrLineCoordPixels[0][1], 
+             "L", trtrLineCoordPixels[1][0], trtrLineCoordPixels[1][1],
+             "L", trtrLineCoordPixels[2][0], trtrLineCoordPixels[2][1],
+             "L", trtrLineCoordPixels[3][0], trtrLineCoordPixels[3][1],
+             "L", trtrLineCoordPixels[0][0], trtrLineCoordPixels[0][1]]
+             ).attr("stroke", "blue").attr("stroke-width", "0.5").attr("fill", "blue");
+        }
       }
     }
   };
@@ -114,7 +135,10 @@
     var data;
     var that       = this;
     var containers = MapCanvas.CONTAINERS;
-    if (this.locality === "states")   data = window.StatelineStates;
+    if (this.locality === "states"){
+      data = window.StatelineStates;
+      
+    };
     if (this.locality === "counties") data = window.StatelineCounties;
     for (container in containers) {
       var localityMap = new Landline(data[container]).all();
