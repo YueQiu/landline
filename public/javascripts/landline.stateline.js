@@ -135,10 +135,7 @@
     var data;
     var that       = this;
     var containers = MapCanvas.CONTAINERS;
-    if (this.locality === "states"){
-      data = window.StatelineStates;
-      
-    };
+    if (this.locality === "states")   data = window.StatelineStates;
     if (this.locality === "counties") data = window.StatelineCounties;
     for (container in containers) {
       var localityMap = new Landline(data[container]).all();
