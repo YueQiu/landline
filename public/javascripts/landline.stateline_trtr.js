@@ -25,7 +25,11 @@
     "hawaii"      : {el : "landline_hawaii"},
     "dc"          : {el : "landline_dc"},
     // new territories
-    "trtr"        : {el : "landline_trtr"}
+    "pr"          : {el : "landline_pr"},
+    "gu"          : {el : "landline_gu"},
+    "nm"          : {el : "landline_nm"},
+    "vi"          : {el : "landline_vi"},
+    "as"          : {el : "landline_as"},
   };
 
   MapCanvas.prototype.on = function(evt, cb) {
@@ -64,14 +68,14 @@
     containers["alaska"] = _.extend(containers["alaska"], {
       width  : this.container.width() * 0.25,
       height : this.container.height() * 0.27,
-      top    : "63%",
+      top    : "58%",
       left   : 0.0
     });
 
     containers["hawaii"] = _.extend(containers["hawaii"], {
       width  : this.container.width() * 0.15,
       height : this.container.height() * 0.21,
-      top    : "70%",
+      top    : "65%",
       left   : 0.25
     });
 
@@ -83,18 +87,54 @@
     });
 
     // new trtr
-    containers["trtr"] = _.extend(containers["trtr"], {
-      width  : this.container.width() * 0.02,
+    containers["pr"] = _.extend(containers["pr"], {
+      width  : this.container.width() * 0.14,
       height : this.container.height() * 0.08,
-      top    : "5%",
-      left   : 0.70
+      top    : "88%",
+      left   : 0.05,
+      border : "1px solid #cecece",
     });
+
+    containers["gu"] = _.extend(containers["gu"], {
+      width  : this.container.width() * 0.14,
+      height : this.container.height() * 0.08,
+      top    : "88%",
+      left   : 0.24,
+      border : "1px solid #cecece"
+    });
+
+    containers["nm"] = _.extend(containers["nm"], {
+      width  : this.container.width() * 0.14,
+      height : this.container.height() * 0.08,
+      top    : "88%",
+      left   : 0.43,
+      border : "1px solid #cecece"
+    });
+
+    containers["vi"] = _.extend(containers["vi"], {
+      width  : this.container.width() * 0.14,
+      height : this.container.height() * 0.08,
+      top    : "88%",
+      left   : 0.62,
+      border : "1px solid #cecece"
+    });
+
+    containers["as"] = _.extend(containers["as"], {
+      width  : this.container.width() * 0.14,
+      height : this.container.height() * 0.08,
+      top    : "88%",
+      left   : 0.81,
+      border : "1px solid #cecece"
+    });
+
+
 
     var setPositions = function(container) {
       $("#" + containers[container].el)
         .width(containers[container].width)
         .height(containers[container].height)
         .css("top", containers[container].top)
+        .css("border", containers[container].border)
         // calculate how many pixels left the % is, 
         // so Hawaii doesn't move around when the window is resized
         .css("margin-left", that.container.width() * containers[container].left)
@@ -116,17 +156,7 @@
           var dcLineCoordPixels = _(dcLineCoordPcts).map(function(pair) { return [containers[container].width * pair[0], containers[container].height * pair[1]] });
           this.paper[container].path(["M", dcLineCoordPixels[0][0], dcLineCoordPixels[0][1], "L", dcLineCoordPixels[1][0], dcLineCoordPixels[1][1]] ).attr("stroke", "#cecece").attr("stroke-width", "0.5");
         }
-        if (container === "trtr"){
-          var trtrLineCoordPcts   = [[0.70, 0.05], [0.70, 0.25], [1.00,0.25], [1.00,0.05]];
-          var trtrLineCoordPixels = _(trtrLineCoordPcts).map(function(pair) { return [containers[container].width * pair[0], containers[container].height * pair[1], containers[container].height * pair[2], containers[container].height * pair[3]] });
-          var trtrshap = this.paper[container].path(
-            ["M", trtrLineCoordPixels[0][0], trtrLineCoordPixels[0][1], 
-             "L", trtrLineCoordPixels[1][0], trtrLineCoordPixels[1][1],
-             "L", trtrLineCoordPixels[2][0], trtrLineCoordPixels[2][1],
-             "L", trtrLineCoordPixels[3][0], trtrLineCoordPixels[3][1],
-             "L", trtrLineCoordPixels[0][0], trtrLineCoordPixels[0][1]]
-             ).attr("stroke", "blue").attr("stroke-width", "0.5").attr("fill", "blue");
-        }
+
       }
     }
   };
@@ -138,6 +168,7 @@
     if (this.locality === "states")   data = window.StatelineStates;
     if (this.locality === "counties") data = window.StatelineCounties;
     for (container in containers) {
+      console.log(container)
       var localityMap = new Landline(data[container]).all();
       localityMap.asSVG(containers[container].width, containers[container].height, function(svg, it) {
         var path = that.paper[container].path(svg);
